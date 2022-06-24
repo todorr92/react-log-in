@@ -42,34 +42,36 @@ const Login = (props) => {
     isValid: null,
   });
 
-  // useEffect(() => {
-  //   const identifier = setTimeout(() => {
-  //     console.log("Checking form validity");
-  //     setFormIsValid(
-  //       enteredEmail.includes("@") && enteredPassword.trim().length > 6
-  //     );
-  //   }, 500);
+  // object disctructuring, extracting is valid state and storing it as aliases
+  const { isValid: emailIsValid } = emailState;
+  const { isValid: passwordIsValid } = passwordState;
 
-  //   // something that is called cleanup function, useEffect above is running everytime something is changed in email and password field, so instead of sending bunch of http requests for example, we will send one after a while
-  //   return () => {
-  //     console.log("CLEANUP");
-  //     clearTimeout(identifier);
-  //   };
-  // }, [enteredEmail, enteredPassword]); //useEffect will run only if those dependecies in the square brackets are changed, if no dependecies, it will run only first time when the app is reloaded
+  useEffect(() => {
+    const identifier = setTimeout(() => {
+      console.log("Checking form validity");
+      setFormIsValid(emailIsValid && passwordIsValid);
+    }, 500);
+
+    // something that is called cleanup function, useEffect above is running everytime something is changed in email and password field, so instead of sending bunch of http requests for example, we will send one after a while
+    return () => {
+      console.log("CLEANUP");
+      clearTimeout(identifier);
+    };
+  }, [emailIsValid, passwordIsValid]); //useEffect will run only if those dependecies in the square brackets are changed, if no dependecies, it will run only first time when the app is reloaded
 
   const emailChangeHandler = (event) => {
     dispatchEmail({ type: "USER_INPUT", val: event.target.value });
-    setFormIsValid(event.target.value.includes("@") && passwordState.isValid);
+    // setFormIsValid(event.target.value.includes("@") && passwordState.isValid);
   };
 
   const passwordChangeHandler = (event) => {
     dispatchPassword({ type: "USER_INPUT", val: event.target.value });
 
-    setFormIsValid(emailState.isValid && passwordState.isValid);
+    // setFormIsValid(emailState.isValid && passwordState.isValid);
   };
 
   const validateEmailHandler = () => {
-    emailReducer({ type: "INPUT_BLUR" });
+    dispatchEmail({ type: "INPUT_BLUR" });
   };
 
   const validatePasswordHandler = () => {
